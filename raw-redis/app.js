@@ -2,6 +2,15 @@ const redis = require('redis');
 const client = redis.createClient();
 client.AUTH('Acesso01!');
 
+function list() {
+    const key = 'frameworks2';
+    client.rpush([key, 'angular', 'react', 'vue']);
+    client.lrange(key, 0, -1, function(error, object) {
+        console.log('\nRetrieving values from list <lrange>');
+        console.log(object);
+    });
+}
+
 function hash() {
     const key = 'frameworks';
     client.hmset(key, 'javascript', 'AngularJS', 'css', 'Bootstrap', 'node', 'Express');
@@ -32,6 +41,7 @@ function getAllKeys() {
 function runSampleFuctions() {
     setAndGet('project', 'NodeJS + Redis');
     hash();
+    list();
 }
 
 client.on('connect', function() {
