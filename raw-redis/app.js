@@ -2,6 +2,18 @@ const redis = require('redis');
 const client = redis.createClient();
 client.AUTH('Acesso01!');
 
+function deleteFromRedis() {
+    const key = 'frameworks';
+    client.del(key, function(error, reply) {
+        console.log(`Removing values with key ${key}: ${reply}`);
+    });
+
+    client.lrange(key, 0, -1, function(error, object) {
+        console.log('\nRetrieving values from list <lrange> after deleting...');
+        console.log(object);
+    });
+}
+
 function expireKeyValue() {
     const key = 'value-to-expire';
     const value = 'This is a value to expire';
@@ -65,6 +77,7 @@ function runSampleFuctions() {
     list();
     uniqueValues();
     expireKeyValue();
+    deleteFromRedis();
 }
 
 client.on('connect', function() {
