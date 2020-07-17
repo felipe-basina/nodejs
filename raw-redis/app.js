@@ -2,6 +2,17 @@ const redis = require('redis');
 const client = redis.createClient();
 client.AUTH('Acesso01!');
 
+function uniqueValues() {
+    const key = 'tags';
+    client.sadd([key, 'angularjs', 'angularjs', 'backbonejs', 'emberjs'], function (error, reply) {
+        console.log(`Reply after sadd ${reply}`);
+    });
+    client.smembers(key, function(error, object) {
+        console.log('\nRetrieving values from <smembers>');
+        console.log(object);
+    });
+}
+
 function list() {
     const key = 'frameworks2';
     client.rpush([key, 'angular', 'react', 'vue']);
@@ -42,6 +53,7 @@ function runSampleFuctions() {
     setAndGet('project', 'NodeJS + Redis');
     hash();
     list();
+    uniqueValues();
 }
 
 client.on('connect', function() {
