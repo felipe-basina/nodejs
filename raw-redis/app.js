@@ -2,6 +2,16 @@ const redis = require('redis');
 const client = redis.createClient();
 client.AUTH('Acesso01!');
 
+function expireKeyValue() {
+    const key = 'value-to-expire';
+    const value = 'This is a value to expire';
+    
+    setAndGet(key, value);
+
+    const timeToWait = 10;
+    client.expire(key, timeToWait);
+}
+
 function uniqueValues() {
     const key = 'tags';
     client.sadd([key, 'angularjs', 'angularjs', 'backbonejs', 'emberjs'], function (error, reply) {
@@ -54,6 +64,7 @@ function runSampleFuctions() {
     hash();
     list();
     uniqueValues();
+    expireKeyValue();
 }
 
 client.on('connect', function() {
